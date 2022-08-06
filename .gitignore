@@ -1,0 +1,9 @@
+# VisualStudioCode
+.vscode/*
+
+# VisualStudioCode Patch
+# Ignore all local history of files
+**/.history
+
+# Pycache
+__pycache__/*
