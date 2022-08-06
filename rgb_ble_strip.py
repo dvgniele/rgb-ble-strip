@@ -6,14 +6,16 @@ import qasync
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import QObject, QRect, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QComboBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QComboBox, QColorDialog
 
-RGB = {'Red': 255, 'Green': 255, 'Blue': 255}
+rgb = {'red': 255, 'green': 255, 'blue': 255}
 
 
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self._client = None
 
         self.resize(220, 117)
 
@@ -53,6 +55,10 @@ class Window(QMainWindow):
     def devices(self):
         return list()
 
+    @property
+    def client(self):
+        return self._client
+
     @qasync.asyncSlot()
     async def ble_scan(self):
         pass
@@ -62,8 +68,34 @@ class Window(QMainWindow):
         pass
 
     @qasync.asyncSlot()
-    async def ble_send():
-        pass
+    async def ble_send(self):
+        global rgb
+
+        print(rgb)
+        rgb = ColorSelector().get_color()
+        print(rgb)
+
+
+class ColorSelector(QMainWindow):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.setWindowTitle('Color Selector')
+        self.setGeometry(100, 100, 500, 400)
+        self.UiComponents()
+        self.show()
+
+    def UiComponents(self):
+        color = QColorDialog.getColor()
+
+        rgb['red'] = color.red()
+        rgb['green'] = color.green()
+        rgb['blue'] = color.blue()
+
+        return rgb
+
+    def get_color(self):
+        return rgb
 
 
 def main():
